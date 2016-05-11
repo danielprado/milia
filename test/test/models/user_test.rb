@@ -25,7 +25,7 @@ class UserTest < ActiveSupport::TestCase
     should_not allow_value("wild blue").for(:email)
     
     should have_db_column(:tenant_id)
-    should have_db_column(:skip_confirm_change_password).with_options(default: 'f')
+    should have_db_column(:skip_confirm_change_password).with_options(default: false)
 
     should have_db_index(:email)
     should have_db_index(:confirmation_token)
@@ -145,13 +145,11 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 1,tenant.users.count
       
       assert_difference("User.count") do
-        assert_nothing_raised(::Milia::Control::InvalidTenantAccess,
-          "no existing valid current tenant")   {
-   
-            # setup new user
+        assert_nothing_raised do
+          # setup new user
           user = User.new(email: "limesublime@example.com")
           user.save_and_invite_member
-        }
+        end
       end  # no difference
 
       tenant.reload

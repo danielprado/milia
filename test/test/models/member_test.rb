@@ -44,10 +44,10 @@ class MemberTest < ActiveSupport::TestCase
         
         # setup new member
       member = nil
-      assert_nothing_raised  { 
+      assert_nothing_raised do
         member = Member.create_org_admin( user )
         assert  member.errors.empty?
-      }
+      end
 
       assert_equal  Member::DEFAULT_ADMIN[:first_name],member.first_name
       assert_equal  Member::DEFAULT_ADMIN[:last_name],member.last_name

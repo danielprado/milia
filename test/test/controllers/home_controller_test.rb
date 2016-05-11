@@ -9,6 +9,7 @@ class HomeControllerTest < ActionController::TestCase
 
   should "get index" do
     get :index
+    puts response.inspect.to_s
     assert_response :success
   end
 
@@ -55,13 +56,12 @@ class HomeControllerTest < ActionController::TestCase
        # alter the code to invoke redirect_back
     @controller.class.module_eval(
       %q{
-        def index()
-          redirect_back
+        def index
+          redirect_back(fallback_location: root_path)
         end
       }
     )
-
-       # now test it
+    # now test it
     get :index
     assert_response :redirect
     assert_redirected_to  root_url()
@@ -81,14 +81,14 @@ class HomeControllerTest < ActionController::TestCase
        # alter the code to invoke redirect_back
     @controller.class.module_eval(
       %q{
-        def index()
+        def index
           max_tenants
         end
       }
     )
 
        # now test it
-    get :index, { user: { email: 'billybob@bob.com' }, tenant: {name: 'Mangoland'} }
+    get :index, params: { user: { email: 'billybob@bob.com' }, tenant: {name: 'Mangoland'} }
     assert_response :redirect
     assert_redirected_to  root_url()
 
