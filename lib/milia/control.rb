@@ -135,7 +135,7 @@ module Milia
     if ::Milia.use_airbrake
       notify_airbrake( $! )  # have airbrake report this -- requires airbrake gem
     end
-    redirect_back
+    redirect_back(fallback_location: root_path)
   end
   
 # ------------------------------------------------------------------------------
@@ -143,14 +143,7 @@ module Milia
 # ------------------------------------------------------------------------------
   def invalid_tenant
     flash[:error] = "wrong tenant access; sign out & try again"
-    redirect_back
-  end
- 
-# ------------------------------------------------------------------------------
-# redirect_back -- bounce client back to referring page
-# ------------------------------------------------------------------------------
-  def redirect_back
-    redirect_to :back rescue redirect_to root_path
+    redirect_back(fallback_location: root_path)
   end
 
 # ------------------------------------------------------------------------------
